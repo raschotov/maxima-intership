@@ -1,6 +1,7 @@
 package school.maxima.maximadms.models;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -60,7 +61,7 @@ public class Contractor extends AbstractEntity {
     /**
      * Учетные данные
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Credential credential;
     /**
      * Страна
@@ -70,7 +71,7 @@ public class Contractor extends AbstractEntity {
     /**
      * Комментарии
      */
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "contractor_id")
     private List<Comment> comments;
 }
