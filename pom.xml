@@ -34,6 +34,10 @@
     </dependency>
 
     <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+    </dependency>
+    <dependency>
       <artifactId>jbcrypt</artifactId>
       <groupId>org.mindrot</groupId>
       <version>0.4</version>

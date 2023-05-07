@@ -27,4 +27,10 @@ public class CredentialDto extends AbstractDto {
 
     @NotBlank
     private String credentialType;
+
+    @NotBlank
+    private String passport;
+
+    @NotBlank
+    private String inn;
 }

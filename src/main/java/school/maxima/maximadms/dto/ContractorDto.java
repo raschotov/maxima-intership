@@ -1,5 +1,7 @@
 package school.maxima.maximadms.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -36,6 +38,9 @@ public class ContractorDto extends AbstractDto {
 
     @NotBlank
     private String lastName;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime bDate;
 
     @Pattern(regexp = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$")
     private String phone;

@@ -1,7 +1,10 @@
 package school.maxima.maximadms.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import school.maxima.maximadms.dto.DocumentDto;
 import school.maxima.maximadms.dto.FileDto;
 import school.maxima.maximadms.service.DocumentService;
+import school.maxima.maximadms.service.FnsService;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -27,6 +31,7 @@ import school.maxima.maximadms.service.DocumentService;
 public class DocumentController {
 
     private final DocumentService documentService;
+    private final FnsService fnsService;
 
     @GetMapping("/getDocument")
     public List<DocumentDto> getDocument() {
@@ -35,8 +40,20 @@ public class DocumentController {
     }
 
     @PostMapping("/saveDocument")
-    public void saveEmployee(@Valid @RequestBody DocumentDto documentDto,
-        @RequestPart("files") MultipartFile[] multipartFile) {
+    public void saveDocument(@Valid @RequestBody DocumentDto documentDto,
+        @RequestPart("files") MultipartFile[] multipartFile,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse) throws IOException {
+        if (fnsService.getContractorInn(documentDto.getContractor())) {
+            documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
+            documentService.saveOrUpdate(documentDto);
+            log.info("Успешное сохранение документа");
+        } else {
+            httpServletResponse.sendError();
+        }
+    }
+
+    public List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
         List<FileDto> fileDtoList = new ArrayList<>();
         try {
             for (MultipartFile file : multipartFile) {
@@ -46,16 +63,15 @@ public class DocumentController {
                     .build();
                 fileDtoList.add(fileDto);
             }
+            return fileDtoList;
         } catch (Exception e) {
             e.printStackTrace();
+            return new ArrayList<>();
         }
-        documentDto.setFiles(fileDtoList);
-        documentService.saveOrUpdate(documentDto);
-        log.info("Успешное сохранение сотрудника");
     }
 
     @PutMapping("/updateDocument")
-    public void updateEmployee(@RequestBody DocumentDto documentDto) {
+    public void updateDocument(@RequestBody DocumentDto documentDto) {
         documentService.saveOrUpdate(documentDto);
     }
 

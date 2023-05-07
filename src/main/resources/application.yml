@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/maxima_intership
+    username: postgres
+    password: qwerty
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+admin:
+  secret:
+    key: 98760e6506e8f5a25054eecdfe63e75e6215170d
