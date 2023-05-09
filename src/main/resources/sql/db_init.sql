@@ -60,6 +60,7 @@ CREATE TABLE contractors
     sur_name      VARCHAR(255) NOT NULL,
     first_name    VARCHAR(255) NOT NULL,
     last_name     VARCHAR(255) NOT NULL,
+    b_date        TIMESTAMP    NOT NULL,
     created_at    TIMESTAMP    NOT NULL,
     modified_at   TIMESTAMP,
     removed_at    TIMESTAMP,

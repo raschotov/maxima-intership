@@ -39,9 +39,12 @@ public class FnsService {
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
 
-        String inn = makeInnFromJson(makeJsonFromStream(con));
-
-        return inn.equals(contractorDto.getCredential().getInn());
+        if (makeJsonFromStream(con).contains("Информация об ИНН не найдена")) {
+            return false;
+        } else {
+            String inn = makeInnFromJson(makeJsonFromStream(con));
+            return inn.equals(contractorDto.getCredential().getInn());
+        }
     }
 
     public String makeJsonFromStream(HttpURLConnection con) {

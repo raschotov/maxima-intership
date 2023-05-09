@@ -2,6 +2,7 @@ package school.maxima.maximadms.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,29 +45,13 @@ public class DocumentController {
         @RequestPart("files") MultipartFile[] multipartFile,
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse) throws IOException {
-        if (fnsService.getContractorInn(documentDto.getContractor())) {
+        if (fnsService.getContractorInnElseThrow(documentDto.getContractor())) {
             documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
             log.info("Успешное сохранение документа");
         } else {
-            httpServletResponse.sendError();
-        }
-    }
-
-    public List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
-        List<FileDto> fileDtoList = new ArrayList<>();
-        try {
-            for (MultipartFile file : multipartFile) {
-                FileDto fileDto = FileDto.builder()
-                    .incomingFile(file.getBytes())
-                    .fileName(file.getName())
-                    .build();
-                fileDtoList.add(fileDto);
-            }
-            return fileDtoList;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Информация об ИНН не найдена. Проверить правильность введённых данных и повторите попытку.");
         }
     }
 
@@ -84,5 +69,23 @@ public class DocumentController {
         }
 
         documentService.remove(id);
+    }
+
+    private List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
+        List<FileDto> fileDtoList = new ArrayList<>();
+
+        Arrays.stream(multipartFile).forEach(s -> {
+            FileDto fileDto;
+            try {
+                fileDto = FileDto.builder()
+                    .incomingFile(s.getBytes())
+                    .fileName(s.getName())
+                    .build();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            fileDtoList.add(fileDto);
+        });
+        return fileDtoList;
     }
 }
