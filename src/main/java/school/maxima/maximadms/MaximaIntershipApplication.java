@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MaximaDmsApplication {
+public class MaximaIntershipApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MaximaDmsApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MaximaIntershipApplication.class, args);
+    }
 
 }
