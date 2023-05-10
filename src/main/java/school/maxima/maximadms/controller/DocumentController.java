@@ -40,8 +40,8 @@ public class DocumentController {
 
     @PostMapping("/saveDocument")
     public void saveDocument(@Valid @RequestBody DocumentDto documentDto,
-        @RequestPart("files") MultipartFile[] multipartFile) throws IOException {
-        if (fnsService.getContractorInnElseThrow(documentDto.getContractor())) {
+        @RequestPart("files") MultipartFile[] multipartFile) {
+        if (fnsService.getContractorInn(documentDto.getContractor())) {
             documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
             log.info("Успешное сохранение документа");

@@ -2,17 +2,14 @@ package school.maxima.maximadms.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import school.maxima.maximadms.dto.ContractorDto;
 
 @Service
@@ -23,47 +20,30 @@ public class FnsService {
     @Value("${admin.secret.key}")
     private String secretKey;
 
-    public boolean getContractorInnElseThrow(ContractorDto contractorDto) throws IOException {
+    public boolean getContractorInn(ContractorDto contractorDto) {
 
-        String urlProp = String.format(
-            "https://api-fns.ru/api/innfl?fam=%s&nam=%s&otch=%s&bdate=%s&doctype=21s&docno=%s&key=%s",
+        String urlPropTemplate = "https://api-fns.ru/api/innfl?fam=%s&nam=%s&otch=%s&bdate=%s&doctype=21s&docno=%s&key=%s";
+        String urlProp = String.format(urlPropTemplate,
             contractorDto.getSurName(),
             contractorDto.getFirstName(),
             contractorDto.getSurName(),
             contractorDto.getBDate(),
             contractorDto.getCredential().getPassport(),
             secretKey);
-        final URL url = new URL(urlProp);
-        final HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
+        final RestTemplate restTemplate = new RestTemplate();
+        final String innFns = restTemplate.getForObject(urlProp, String.class);
 
-        if (makeJsonFromStream(con).contains("Информация об ИНН не найдена")) {
+        assert innFns != null;
+        if (innFns.contains("Информация об ИНН не найдена")) {
             return false;
         } else {
-            String inn = makeInnFromJson(makeJsonFromStream(con));
+            String inn = makeInnFromJson(innFns);
             return inn.equals(contractorDto.getCredential().getInn());
         }
     }
 
-    public String makeJsonFromStream(HttpURLConnection con) {
-
-        try (final BufferedReader in = new BufferedReader(
-            new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            final StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            return content.toString();
-        } catch (final Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
-    }
-
-    public String makeInnFromJson(String json) {
+    private String makeInnFromJson(String json) {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
