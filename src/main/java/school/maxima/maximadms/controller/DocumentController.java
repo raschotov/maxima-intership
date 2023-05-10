@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +40,7 @@ public class DocumentController {
 
     @PostMapping("/saveDocument")
     public void saveDocument(@Valid @RequestBody DocumentDto documentDto,
-        @RequestPart("files") MultipartFile[] multipartFile,
-        HttpServletRequest httpServletRequest,
-        HttpServletResponse httpServletResponse) throws IOException {
+        @RequestPart("files") MultipartFile[] multipartFile) throws IOException {
         if (fnsService.getContractorInnElseThrow(documentDto.getContractor())) {
             documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
