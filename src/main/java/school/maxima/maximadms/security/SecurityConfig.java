@@ -39,8 +39,8 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/api/v1/auth/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+            .antMatchers("/auth/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .httpBasic();
