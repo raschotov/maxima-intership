@@ -16,10 +16,14 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository repository;
     private final DocumentMapper mapper;
 
-
     @Override
     public List<DocumentDto> getAll() {
-        return MapperUtil.convertList(repository.findAll(), mapper::toDto);
+        return MapperUtil.mapList(repository.findAll(), DocumentDto.class);
+    }
+
+    @Override
+    public Boolean exists(Integer id) {
+        return repository.existsById(id);
     }
 
     @Override

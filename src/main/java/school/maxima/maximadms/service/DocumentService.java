@@ -7,6 +7,8 @@ public interface DocumentService {
 
     List<DocumentDto> getAll();
 
+    Boolean exists(Integer id);
+
     DocumentDto getById(Integer id);
 
     void saveOrUpdate(DocumentDto dto);

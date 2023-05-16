@@ -1,30 +1,28 @@
 package school.maxima.maximadms.mapper;
 
-import java.util.Objects;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.PostConstruct;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import school.maxima.maximadms.dto.UserDto;
 import school.maxima.maximadms.models.User;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserMapper implements Mapper<User, UserDto> {
+public class UserMapper extends AbstractMapper<User, UserDto> {
 
-    private ModelMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserMapper(ModelMapper mapper) {
-        this.mapper = mapper;
+    public UserMapper(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostConstruct
+    public void setupMapper() {
+        mapper.createTypeMap(UserDto.class, User.class)
+            .addMappings(m -> m.skip(User::setPassword)).setPostConverter(toEntityConverter());
     }
 
     @Override
-    public User toEntity(UserDto dto) {
-        return Objects.isNull(dto) ? null : mapper.map(dto, User.class);
-    }
-
-    @Override
-    public UserDto toDto(User entity) {
-        return Objects.isNull(entity) ? null : mapper.map(entity, UserDto.class);
+    void mapSpecificFields(UserDto source, User destination) {
+        destination.setPassword(passwordEncoder.encode(source.getPassword()));
     }
 }

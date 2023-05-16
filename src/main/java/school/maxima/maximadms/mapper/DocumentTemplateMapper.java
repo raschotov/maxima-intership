@@ -1,30 +1,28 @@
 package school.maxima.maximadms.mapper;
 
-import java.util.Objects;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.maxima.maximadms.dto.DocumentTemplateDto;
+import school.maxima.maximadms.dto.DocumentTemplateFieldDto;
 import school.maxima.maximadms.models.DocumentTemplate;
+import school.maxima.maximadms.models.DocumentTemplateField;
+import school.maxima.maximadms.utils.MapperUtil;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class DocumentTemplateMapper implements Mapper<DocumentTemplate, DocumentTemplateDto> {
-
-    private ModelMapper mapper;
-
-    public DocumentTemplateMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
+public class DocumentTemplateMapper extends AbstractMapper<DocumentTemplate, DocumentTemplateDto> {
 
     @Override
     public DocumentTemplate toEntity(DocumentTemplateDto dto) {
-        return Objects.isNull(dto) ? null : mapper.map(dto, DocumentTemplate.class);
+        DocumentTemplate documentTemplate = mapper.map(dto, DocumentTemplate.class);
+        documentTemplate.setFields(
+            MapperUtil.mapList(dto.getFields(), DocumentTemplateField.class));
+        return documentTemplate;
     }
 
     @Override
     public DocumentTemplateDto toDto(DocumentTemplate entity) {
-        return Objects.isNull(entity) ? null : mapper.map(entity, DocumentTemplateDto.class);
+        DocumentTemplateDto documentTemplateDto = mapper.map(entity, DocumentTemplateDto.class);
+        documentTemplateDto.setFields(
+            MapperUtil.mapList(entity.getFields(), DocumentTemplateFieldDto.class));
+        return documentTemplateDto;
     }
 }

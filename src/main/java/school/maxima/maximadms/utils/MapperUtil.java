@@ -1,15 +1,24 @@
 package school.maxima.maximadms.utils;
 
 import java.util.List;
-import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Setter
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MapperUtil {
 
-    public static <R, E> List<R> convertList(List<E> list, Function<E, R> converter) {
-        return list.stream().map(converter).toList();
+    private static ModelMapper mapper;
+
+    public static <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
+        return source
+            .stream()
+            .map(element -> mapper.map(element, targetClass))
+            .toList();
     }
 
     public ModelMapper getMapper() {
