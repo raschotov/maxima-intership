@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.mindrot.jbcrypt.BCrypt;
 import school.maxima.maximadms.models.enums.UserRole;
 
 /**
@@ -74,12 +73,6 @@ public class User extends AbstractEntity {
     @Column(name = "last_visit", nullable = false)
     private LocalDateTime lastVisit;
 
-    public void setPassword(String password) {
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-    }
 
-    public boolean checkPassword(String password) {
-        return BCrypt.checkpw(password, this.password);
-    }
 
 }
