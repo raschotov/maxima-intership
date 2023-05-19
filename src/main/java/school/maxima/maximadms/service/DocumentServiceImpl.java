@@ -4,8 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import school.maxima.maximadms.dto.DocumentRequestDto;
-import school.maxima.maximadms.dto.DocumentResponse;
+import school.maxima.maximadms.dto.DocumentDto;
 import school.maxima.maximadms.mapper.DocumentMapper;
 import school.maxima.maximadms.repository.DocumentRepository;
 import school.maxima.maximadms.utils.MapperUtil;
@@ -14,35 +13,31 @@ import school.maxima.maximadms.utils.MapperUtil;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DocumentServiceImpl implements DocumentService {
 
-    private final DocumentRepository documentRepository;
-    private final DocumentMapper documentMapper;
+    private final DocumentRepository repository;
+    private final DocumentMapper mapper;
 
     @Override
-    public DocumentResponse getAll(int pageNo, int pageSize) {
-        List<DocumentRequestDto> documents = MapperUtil.convertList(
-                documentRepository.findAll(), documentMapper::toDto);
-
-        //TODO: FIXME
-        return new DocumentResponse(pageNo, pageSize);
-    }
-
-    @Override
-    public DocumentRequestDto getById(Integer id) {
-        return documentMapper.toDto(documentRepository.getReferenceById(id));
-    }
-
-    @Override
-    public void saveOrUpdate(DocumentRequestDto documentRequestDto) {
-        documentRepository.save(documentMapper.toEntity(documentRequestDto));
-    }
-
-    @Override
-    public void remove(Integer id) {
-        documentRepository.deleteById(id);
+    public List<DocumentDto> getAll() {
+        return MapperUtil.mapList(repository.findAll(), DocumentDto.class);
     }
 
     @Override
     public Boolean exists(Integer id) {
-        return documentRepository.existsById(id);
+        return repository.existsById(id);
+    }
+
+    @Override
+    public DocumentDto getById(Integer id) {
+        return mapper.toDto(repository.getReferenceById(id));
+    }
+
+    @Override
+    public void saveOrUpdate(DocumentDto dto) {
+        mapper.toDto(repository.save(mapper.toEntity(dto)));
+    }
+
+    @Override
+    public void remove(Integer id) {
+        repository.deleteById(id);
     }
 }

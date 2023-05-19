@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,34 +34,42 @@ public class DocumentController {
     private final DocumentService documentService;
     private final FnsService fnsService;
 
-    @GetMapping("/getDocument")
-    public List<DocumentDto> getDocument() {
-        log.info("Получаем данные для сервиса клиента");
-        return documentService.getAll();
+    @GetMapping("/documents")
+    public ResponseEntity<List<DocumentDto>> getDocument() {
+        return new ResponseEntity<>(documentService.getAll(), HttpStatus.OK);
     }
 
-    @PostMapping("/saveDocument")
-    public void saveDocument(@Valid @RequestBody DocumentDto documentDto,
+    @PostMapping("/documents")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Void> saveDocument(@Valid @RequestBody DocumentDto documentDto,
         @RequestPart("files") MultipartFile[] multipartFile) {
         if (fnsService.getContractorInn(documentDto.getContractor())) {
             documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
-            log.info("Успешное сохранение документа");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "Информация об ИНН не найдена. Проверить правильность введённых данных и повторите попытку.");
         }
     }
 
-    @PutMapping("/updateDocument")
-    public void updateDocument(@RequestBody DocumentDto documentDto) {
+    @PutMapping("/documents/{id}")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<Void> updateDocument(@PathVariable("id") Integer id,
+        @RequestBody DocumentDto documentDto) {
+        if (!documentService.exists(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Документ с идентификатором " + id + " не найден");
+        }
         documentService.saveOrUpdate(documentDto);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/deleteDocument/{id}")
-    public void delete(@PathVariable(name = "id") Integer id) {
+    @DeleteMapping("/documents/{id}")
+    @Secured("ROLE_ADMIN")
+    public void delete(@PathVariable("id") Integer id) {
 
-        if (id == -1L) {
+        if (!documentService.exists(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "Неверно заданный id для удаления");
         }
