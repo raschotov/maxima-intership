@@ -4,11 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import school.maxima.maximadms.controller.AuthController;
 import school.maxima.maximadms.dto.DocumentDto;
 import school.maxima.maximadms.mapper.DocumentMapper;
@@ -25,10 +21,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository repository;
     private final DocumentMapper mapper;
 
-    private final UserRepository userRepository;
 
-
-    private final AuthController authController;
+    private final CurrentUserUtil currentUserUtil;
 
     @Override
     public List<DocumentDto> getAll() {
@@ -50,11 +44,11 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = mapper.toEntity(dto);
         LocalDateTime currentTime = LocalDateTime.now();
         document.setModifiedAt(currentTime);
-        document.setModifiedAtUser(getCurrentUser());
+        document.setModifiedAtUser(currentUserUtil.getCurrentUser());
 
         if (dto.getId() == null) {
             document.setCreatedAt(currentTime);
-            document.setCreatedAtUser(getCurrentUser());
+            document.setCreatedAtUser(currentUserUtil.getCurrentUser());
         }
 
         repository.save(document);
@@ -67,20 +61,12 @@ public class DocumentServiceImpl implements DocumentService {
         Document document = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Документ с : " + id + " не найден"));
         document.setModifiedAt(LocalDateTime.now());
-        document.setModifiedAtUser(getCurrentUser());
+        document.setModifiedAtUser(currentUserUtil.getCurrentUser());
         document.setRemovedAt(LocalDateTime.now());
-        document.setRemovedAtUser(getCurrentUser());
+        document.setRemovedAtUser(currentUserUtil.getCurrentUser());
         repository.save(document);
     }
 
 
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Пользователь не аутентифицирован");
-        }
-        String login = authentication.getName();
-        return userRepository.findByLogin(login)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
-    }
+
 }
