@@ -1,12 +1,15 @@
 package school.maxima.maximadms.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import school.maxima.maximadms.dto.UserDto;
 import school.maxima.maximadms.dto.UserReadDto;
 import school.maxima.maximadms.mapper.UserMapper;
 import school.maxima.maximadms.mapper.UserReadMapper;
+import school.maxima.maximadms.models.User;
 import school.maxima.maximadms.repository.UserRepository;
 import school.maxima.maximadms.utils.MapperUtil;
 
@@ -46,5 +49,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void remove(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return userRepository.findByLogin(login);
     }
 }

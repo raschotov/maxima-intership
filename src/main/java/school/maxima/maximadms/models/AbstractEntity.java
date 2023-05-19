@@ -76,18 +76,21 @@ public abstract class AbstractEntity implements Serializable {
     @JoinColumn(name = "user_id_removed_at")
     private User removedAtUser;
 
-    @PrePersist
+    /*@PrePersist
     public void toCreate() {
         setCreatedAt(LocalDateTime.now());
+        setCreatedAtUser(getCurrentUser());
     }
 
     @PreUpdate
     public void toModified() {
         setModifiedAt(LocalDateTime.now());
+        setModifiedAtUser(getCurrentUser());
     }
 
     @PreRemove
     public void toRemove() {
         setRemovedAt(LocalDateTime.now());
-    }
+        setRemovedAtUser(getCurrentUser());
+    }*/
 }

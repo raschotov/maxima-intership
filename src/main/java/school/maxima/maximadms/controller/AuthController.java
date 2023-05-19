@@ -22,6 +22,7 @@ import school.maxima.maximadms.dto.AuthResponseDTO;
 import school.maxima.maximadms.dto.LoginDto;
 import school.maxima.maximadms.dto.UserDto;
 import school.maxima.maximadms.dto.UserReadDto;
+import school.maxima.maximadms.models.User;
 import school.maxima.maximadms.security.JwtGenerator;
 import school.maxima.maximadms.service.UserService;
 
@@ -83,5 +84,8 @@ public class AuthController {
 
         userService.remove(id);
     }
+
+
+
 
 }
