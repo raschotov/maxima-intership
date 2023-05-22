@@ -42,15 +42,19 @@ class UserServiceImplTest {
 
     @Test
     void getById() {
-
+        UserReadDto expected = userReadMapper.toDto(user1);
+        UserReadDto actual = userService.getById(user1.getId());
+        assertEquals(expected, actual);
     }
 
     @Test
     void existsByLogin() {
+        assertTrue(userService.existsByLogin(user1.getLogin()));
     }
 
     @Test
     void exists() {
+        assertTrue(userRepository.existsById(id));
     }
 
     @Test
@@ -66,11 +70,14 @@ class UserServiceImplTest {
         userRepository.delete(user3);
         List<UserReadDto> expected = MapperUtil.mapList(List.of(user1, user2), UserReadDto.class);
         List<UserReadDto> actual = userService.getAll();
+        assertEquals(expected, actual);
     }
 
     @Test
     void findByLogin() {
-
+        UserReadDto expected = userReadMapper.toDto(user1);
+        UserReadDto actual = userService.getById(id);
+        assertEquals(expected, actual);
     }
 
     @AfterEach

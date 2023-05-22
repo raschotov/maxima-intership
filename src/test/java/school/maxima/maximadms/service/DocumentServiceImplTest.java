@@ -42,6 +42,7 @@ class DocumentServiceImplTest {
 
     @Test
     void exists() {
+        assertTrue(documentRepository.existsById(id));
     }
 
     @Test
