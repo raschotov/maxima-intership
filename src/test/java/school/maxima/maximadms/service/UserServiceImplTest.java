@@ -8,9 +8,11 @@ import school.maxima.maximadms.dto.UserReadDto;
 import school.maxima.maximadms.mapper.UserMapper;
 import school.maxima.maximadms.mapper.UserReadMapper;
 import school.maxima.maximadms.models.User;
+import school.maxima.maximadms.models.enums.UserRole;
 import school.maxima.maximadms.repository.UserRepository;
 import school.maxima.maximadms.utils.MapperUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +31,36 @@ class UserServiceImplTest {
 
     @BeforeEach
     private void generateTestData() {
+        user1.setLogin("aantonova");
+        user1.setPassword("123");
+        user1.setUserRole(UserRole.USER_ROLE);
+        user1.setFirstName("Anna");
+        user1.setLastName("Antonova");
+        user1.setSurName("Alexeevna");
+        user1.setTelegram(null);
+        user1.setEmail(null);
+        user1.setLastVisit(LocalDateTime.now());
+
+        user1.setLogin("bbragin");
+        user1.setPassword("qwerty");
+        user1.setUserRole(UserRole.USER_ROLE);
+        user1.setFirstName("Boris");
+        user1.setLastName("Bragin");
+        user1.setSurName("Borisovich");
+        user1.setTelegram(null);
+        user1.setEmail(null);
+        user1.setLastVisit(LocalDateTime.now());
+
+        user1.setLogin("aantonova");
+        user1.setPassword("asdfg");
+        user1.setUserRole(UserRole.USER_ROLE);
+        user1.setFirstName("Vladimir");
+        user1.setLastName("Volodin");
+        user1.setSurName("Vladimirovich");
+        user1.setTelegram(null);
+        user1.setEmail(null);
+        user1.setLastVisit(LocalDateTime.now());
+
         userRepository.saveAll(List.of(user1, user2));
         id = 1;
     }
