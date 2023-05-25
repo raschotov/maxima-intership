@@ -1,0 +1,47 @@
+{
+  "name": "maxima",
+  "internalRegistryNumber": "internalRegistryNumber",
+  "template": {
+    "name": "название шаблона",
+    "version": 1,
+    "fields": [
+      {
+        "name": "название поля",
+        "fieldType": "TEXT_SINGLE_LINE",
+        "placeholder": "что-то написано",
+        "defaultValue": "шт/кг/и т.д."
+      },
+      {
+        "name": "еще поле если оно не одно",
+        "fieldType": "TEXT_SINGLE_LINE",
+        "placeholder": "еще что-то написано",
+        "defaultValue": "шт/кг/и т.д."
+      }
+    ]
+  },
+  "contractor": {
+    "firstName": "Имя (для теста ставить реальное)",
+    "surName": "Фамилия (для теста ставить реальное)",
+    "lastName": "Отчество (для теста ставить реальное)",
+    "date": "18.01.2000 (для теста ставить реальное)",
+    "phone": "+7(555)555-55-55",
+    "telegram": "@nikname",
+    "email": "test@yandex.ru",
+    "country": "Россия",
+    "credential": {
+      "text": "текст",
+      "version": 1,
+      "credentialType": "NATURAL_PERSON",
+      "passport": "8888888888 (для теста ставить реальное)",
+      "inn": "777777777777 (для теста ставить реальное)"
+    },
+    "comments": [
+      {
+        "text": "текст коммента"
+      },
+      {
+        "text": "текст коммента"
+      }
+    ]
+  }
+}
