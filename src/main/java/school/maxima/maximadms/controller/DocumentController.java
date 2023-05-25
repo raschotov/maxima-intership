@@ -1,13 +1,9 @@
 package school.maxima.maximadms.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -17,17 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import school.maxima.maximadms.dto.DocumentDto;
-import school.maxima.maximadms.dto.FileDto;
 import school.maxima.maximadms.service.DocumentService;
 import school.maxima.maximadms.service.FnsService;
 
 @RestController
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Slf4j
 public class DocumentController {
 
@@ -41,10 +34,10 @@ public class DocumentController {
 
     @PostMapping("/documents")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> saveDocument(@Valid @RequestBody DocumentDto documentDto,
-        @RequestPart("files") MultipartFile[] multipartFile) {
+    public ResponseEntity<Void> saveDocument(@Valid @RequestBody DocumentDto documentDto/*,
+        @RequestPart("files") MultipartFile[] multipartFile*/) {
         if (fnsService.getContractorInn(documentDto.getContractor())) {
-            documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
+            /*documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));*/
             documentService.saveOrUpdate(documentDto);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
@@ -77,7 +70,7 @@ public class DocumentController {
         documentService.remove(id);
     }
 
-    private List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
+    /*private List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
         List<FileDto> fileDtoList = new ArrayList<>();
 
         Arrays.stream(multipartFile).forEach(s -> {
@@ -93,5 +86,5 @@ public class DocumentController {
             fileDtoList.add(fileDto);
         });
         return fileDtoList;
-    }
+    }*/
 }

@@ -1,5 +1,7 @@
 package school.maxima.maximadms.mapper;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.maxima.maximadms.dto.CommentDto;
 import school.maxima.maximadms.dto.ContractorDto;
@@ -10,8 +12,11 @@ import school.maxima.maximadms.models.Credential;
 import school.maxima.maximadms.utils.MapperUtil;
 
 @Component
-public class ContractorMapper extends AbstractMapper<Contractor, ContractorDto> {
+public class ContractorMapper implements Mapper<Contractor, ContractorDto> {
 
+    @Autowired
+    private ModelMapper mapper;
+    
     @Override
     public Contractor toEntity(ContractorDto dto) {
         Contractor contractor = mapper.map(dto, Contractor.class);

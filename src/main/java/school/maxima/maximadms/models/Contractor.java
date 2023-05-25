@@ -1,6 +1,5 @@
 package school.maxima.maximadms.models;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -47,8 +46,8 @@ public class Contractor extends AbstractEntity {
     /**
      * День рождения
      */
-    @Column(name = "bdate", nullable = false)
-    private LocalDateTime bDate;
+    @Column(name = "b_date", nullable = false)
+    private String date;
     /**
      * Телефон
      */

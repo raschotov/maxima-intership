@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import school.maxima.maximadms.dto.ContractorDto;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class FnsService {
 
@@ -21,13 +19,13 @@ public class FnsService {
     private String secretKey;
 
     public boolean getContractorInn(ContractorDto contractorDto) {
-
+        log.info(contractorDto.getDate());
         String urlPropTemplate = "https://api-fns.ru/api/innfl?fam=%s&nam=%s&otch=%s&bdate=%s&doctype=21s&docno=%s&key=%s";
         String urlProp = String.format(urlPropTemplate,
             contractorDto.getSurName(),
             contractorDto.getFirstName(),
-            contractorDto.getSurName(),
-            contractorDto.getBDate(),
+            contractorDto.getLastName(),
+            contractorDto.getDate(),
             contractorDto.getCredential().getPassport(),
             secretKey);
 

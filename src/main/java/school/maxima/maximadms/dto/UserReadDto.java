@@ -1,9 +1,5 @@
 package school.maxima.maximadms.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,24 +18,17 @@ import school.maxima.maximadms.models.enums.UserRole;
 @ToString
 public class UserReadDto extends AbstractDto {
 
-    @NotBlank
     private String login;
 
-    @NotNull
     private UserRole userRole;
 
-    @NotBlank
     private String firstName;
 
-    @NotBlank
     private String lastName;
 
-    @NotBlank
     private String surName;
 
-    @Pattern(regexp = ".*\\B@(?=\\w{5,32}\\b)[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*.*")
     private String telegram;
 
-    @Email
     private String email;
 }

@@ -15,7 +15,7 @@ CREATE TABLE users
     sur_name            VARCHAR(255) NOT NULL,
     telegram            VARCHAR(255),
     email               VARCHAR(255) UNIQUE,
-    last_visit          TIMESTAMP    NOT NULL,
+    last_visit          TIMESTAMP,
     is_removed          BOOLEAN               DEFAULT FALSE
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE contractors
     sur_name            VARCHAR(255) NOT NULL,
     first_name          VARCHAR(255) NOT NULL,
     last_name           VARCHAR(255) NOT NULL,
-    b_date              TIMESTAMP    NOT NULL,
+    b_date              VARCHAR(255) NOT NULL,
     created_at          TIMESTAMP    NOT NULL,
     modified_at         TIMESTAMP,
     removed_at          TIMESTAMP,
