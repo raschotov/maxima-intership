@@ -33,7 +33,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void saveOrUpdate(DocumentDto dto) {
-        mapper.toDto(repository.save(mapper.toEntity(dto)));
+        repository.save(mapper.toEntity(dto));
     }
 
     @Override
