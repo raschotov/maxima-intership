@@ -114,6 +114,7 @@ CREATE TABLE documents
     user_id_created_at       INTEGER REFERENCES users (id),
     user_id_modified_at      INTEGER REFERENCES users (id),
     user_id_removed_at       INTEGER REFERENCES users (id),
+    file_id                  INTEGER REFERENCES files (id),
     is_removed               BOOLEAN DEFAULT FALSE
 );
 
@@ -127,6 +128,5 @@ CREATE TABLE files
     user_id_created_at  INTEGER REFERENCES users (id),
     user_id_modified_at INTEGER REFERENCES users (id),
     user_id_removed_at  INTEGER REFERENCES users (id),
-    document_id         INTEGER REFERENCES documents (id),
     is_removed          BOOLEAN DEFAULT FALSE
 );

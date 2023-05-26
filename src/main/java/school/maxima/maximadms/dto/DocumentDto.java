@@ -21,7 +21,7 @@ public class DocumentDto extends AbstractDto {
 
     @NotBlank
     private String name;
-    
+
     @NotBlank
     private String internalRegistryNumber;
 
@@ -31,6 +31,5 @@ public class DocumentDto extends AbstractDto {
     @NotNull
     private ContractorDto contractor;
 
-    /*@NotNull
-    private List<FileDto> files;*/
+    private FileDto file;
 }

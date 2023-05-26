@@ -55,7 +55,7 @@ public class Document extends AbstractEntity {
     /**
      * Прикрепленные файлы
      */
-    /*@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "document_id")
-    private List<File> files;*/
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_id")
+    private File file;
 }
