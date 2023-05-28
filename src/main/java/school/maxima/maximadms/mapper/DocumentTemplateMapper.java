@@ -1,5 +1,7 @@
 package school.maxima.maximadms.mapper;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import school.maxima.maximadms.dto.DocumentTemplateDto;
 import school.maxima.maximadms.dto.DocumentTemplateFieldDto;
@@ -8,7 +10,10 @@ import school.maxima.maximadms.models.DocumentTemplateField;
 import school.maxima.maximadms.utils.MapperUtil;
 
 @Component
-public class DocumentTemplateMapper extends AbstractMapper<DocumentTemplate, DocumentTemplateDto> {
+public class DocumentTemplateMapper implements Mapper<DocumentTemplate, DocumentTemplateDto> {
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public DocumentTemplate toEntity(DocumentTemplateDto dto) {

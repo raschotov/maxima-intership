@@ -1,0 +1,10 @@
+{
+  "login": "maxima",
+  "password": "password123",
+  "userRole": "ADMIN_ROLE",
+  "firstName": "Имя",
+  "lastName": "Отчество",
+  "surName": "Фамилия",
+  "telegram": "@nikname",
+  "email": "test@yandex.ru"
+}

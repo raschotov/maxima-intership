@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import school.maxima.maximadms.service.UserService;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final JwtGenerator jwtGenerator;
 
@@ -57,6 +59,7 @@ public class AuthController {
         if (userService.existsByLogin(dto.getLogin())) {
             return ResponseEntity.badRequest().body("Такой логин уже занят!");
         }
+        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         userService.saveOrUpdate(dto);
         return ResponseEntity.ok("Пользователь успешно зарегистрирован!");
     }

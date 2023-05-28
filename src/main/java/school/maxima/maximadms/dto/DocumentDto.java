@@ -1,6 +1,5 @@
 package school.maxima.maximadms.dto;
 
-import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,6 +20,9 @@ import lombok.ToString;
 public class DocumentDto extends AbstractDto {
 
     @NotBlank
+    private String name;
+
+    @NotBlank
     private String internalRegistryNumber;
 
     @NotNull
@@ -29,6 +31,5 @@ public class DocumentDto extends AbstractDto {
     @NotNull
     private ContractorDto contractor;
 
-    @NotNull
-    private List<FileDto> files;
+    private FileDto file;
 }

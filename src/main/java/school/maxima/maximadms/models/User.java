@@ -70,9 +70,6 @@ public class User extends AbstractEntity {
     /**
      * Дата последнего визита
      */
-    @Column(name = "last_visit", nullable = false)
+    @Column(name = "last_visit")
     private LocalDateTime lastVisit;
-
-
-
 }

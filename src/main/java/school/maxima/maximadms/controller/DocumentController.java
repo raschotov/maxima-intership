@@ -1,13 +1,10 @@
 package school.maxima.maximadms.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -20,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import school.maxima.maximadms.dto.DocumentDto;
 import school.maxima.maximadms.dto.FileDto;
 import school.maxima.maximadms.service.DocumentService;
 import school.maxima.maximadms.service.FnsService;
 
 @RestController
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Slf4j
 public class DocumentController {
 
@@ -41,24 +37,25 @@ public class DocumentController {
 
     @PostMapping("/documents")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> saveDocument(@Valid @RequestBody DocumentDto documentDto,
-        @RequestPart("files") MultipartFile[] multipartFile) {
+    public ResponseEntity<String> saveDocument(@RequestPart("file") MultipartFile multipartFile,
+        @Valid @RequestPart("json") DocumentDto documentDto) {
         if (fnsService.getContractorInn(documentDto.getContractor())) {
-            documentDto.setFiles(makeListFileDtoFromMultipartFile(multipartFile));
+            documentDto.setFile(makeFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.ok(
+                "Информация об ИНН подтверждена. ФИО, день рождения и паспортные данные контрагента верные.");
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Информация об ИНН не найдена. Проверить правильность введённых данных и повторите попытку.");
         }
     }
 
     @PutMapping("/documents/{id}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> updateDocument(@PathVariable("id") Integer id,
+    public ResponseEntity<String> updateDocument(@PathVariable("id") Integer id,
         @RequestBody DocumentDto documentDto) {
         if (!documentService.exists(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Документ с идентификатором " + id + " не найден");
         }
         documentService.saveOrUpdate(documentDto);
@@ -67,31 +64,25 @@ public class DocumentController {
 
     @DeleteMapping("/documents/{id}")
     @Secured("ROLE_ADMIN")
-    public void delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
 
         if (!documentService.exists(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Неверно заданный id для удаления");
         }
 
         documentService.remove(id);
+        return ResponseEntity.ok().build();
     }
 
-    private List<FileDto> makeListFileDtoFromMultipartFile(MultipartFile[] multipartFile) {
-        List<FileDto> fileDtoList = new ArrayList<>();
-
-        Arrays.stream(multipartFile).forEach(s -> {
-            FileDto fileDto;
-            try {
-                fileDto = FileDto.builder()
-                    .incomingFile(s.getBytes())
-                    .fileName(s.getName())
-                    .build();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            fileDtoList.add(fileDto);
-        });
-        return fileDtoList;
+    private FileDto makeFileDtoFromMultipartFile(MultipartFile multipartFile) {
+        try {
+            return FileDto.builder()
+                .incomingFile(multipartFile.getBytes())
+                .fileName(multipartFile.getOriginalFilename())
+                .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
