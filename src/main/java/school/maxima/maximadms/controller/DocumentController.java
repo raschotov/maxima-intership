@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import school.maxima.maximadms.dto.DocumentDto;
 import school.maxima.maximadms.dto.FileDto;
 import school.maxima.maximadms.service.DocumentService;
@@ -38,24 +37,25 @@ public class DocumentController {
 
     @PostMapping("/documents")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> saveDocument(@RequestPart("file") MultipartFile multipartFile,
+    public ResponseEntity<String> saveDocument(@RequestPart("file") MultipartFile multipartFile,
         @Valid @RequestPart("json") DocumentDto documentDto) {
         if (fnsService.getContractorInn(documentDto.getContractor())) {
             documentDto.setFile(makeFileDtoFromMultipartFile(multipartFile));
             documentService.saveOrUpdate(documentDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.ok(
+                "Информация об ИНН подтверждена. ФИО, день рождения и паспортные данные контрагента верные.");
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Информация об ИНН не найдена. Проверить правильность введённых данных и повторите попытку.");
         }
     }
 
     @PutMapping("/documents/{id}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<Void> updateDocument(@PathVariable("id") Integer id,
+    public ResponseEntity<String> updateDocument(@PathVariable("id") Integer id,
         @RequestBody DocumentDto documentDto) {
         if (!documentService.exists(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Документ с идентификатором " + id + " не найден");
         }
         documentService.saveOrUpdate(documentDto);
@@ -64,14 +64,15 @@ public class DocumentController {
 
     @DeleteMapping("/documents/{id}")
     @Secured("ROLE_ADMIN")
-    public void delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
 
         if (!documentService.exists(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            return ResponseEntity.badRequest().body(
                 "Неверно заданный id для удаления");
         }
 
         documentService.remove(id);
+        return ResponseEntity.ok().build();
     }
 
     private FileDto makeFileDtoFromMultipartFile(MultipartFile multipartFile) {
